@@ -1,31 +1,29 @@
-import {defineConfig} from "vite";
+import { defineConfig } from "vite";
 import express from "express";
-import {AddressInfo} from "net";
-import {runVault} from "./vault";
-import {ADYEN_URL, payWithAdyen} from "./adyen";
+import { AddressInfo } from "net";
+import { runVault } from "./src/vault";
+import { ADYEN_URL, payWithAdyen } from "./src/adyen";
 
-// run and initialize vault
+// Run and initialize Vault.
 await runVault(ADYEN_URL);
 
 const app = express();
 app.use(express.json());
-app.post("/api/payment", (req, res) => {
+app.post("/api/payment", async (req, res) => {
   const tokenID = req.body.data;
   console.log("token: ", tokenID);
 
-  // pay with adyen
-  payWithAdyen(tokenID)
-    .then((response) => {
-      return response.json();
-    })
-    .then((result) => {
-      console.log('Success:', result);
-      res.json({ status: "success" });
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      res.json({ status: "error" });
-    });
+  // Pay with Adyen.
+  try {
+    const resp = await payWithAdyen(tokenID);
+    const result = await resp.json();
+
+    console.log('Success:', result);
+    res.json({ status: "success" });
+  } catch (error) {
+    console.error('Error:', error);
+    res.json({ status: "error" });
+  }
 });
 let server = app.listen();
 

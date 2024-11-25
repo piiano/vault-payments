@@ -1,10 +1,11 @@
 
 export const ADYEN_URL = 'https://checkout-test.adyen.com';
 const ADYEN_PAYMENT_ENDPOINT = ADYEN_URL + '/v71/payments';
+
 const ADYEN_API_KEY = process.env.ADYEN_API_KEY;
 const ADYEN_MERCHANT_ACCOUNT = process.env.ADYEN_MERCHANT_ACCOUNT;
 
-export async function payWithAdyen(tokenID: string) {
+export async function payWithAdyen(tokenId: string) {
   return fetch(process.env.VITE_PVAULT_URL + '/api/pvlt/1.0/data/actions/http_call?reason=AppFunctionality', {
     method: 'POST',
     headers: {
@@ -13,7 +14,7 @@ export async function payWithAdyen(tokenID: string) {
     },
     body: JSON.stringify({
       template_variables: {
-        card: "pvlt:detokenize:payments::" + tokenID + ":"
+        card: `pvlt:detokenize:payments::${tokenId}:`
       },
       request: {
         url: ADYEN_PAYMENT_ENDPOINT,
@@ -32,8 +33,8 @@ export async function payWithAdyen(tokenID: string) {
           "paymentMethod": {
             "type": "scheme",
             "number": "{{ .card.number }}",
-            "expiryMonth": "{{ .card.expiration | month }}",
-            "expiryYear": "{{ .card.expiration | year }}",
+            "expiryMonth": "{{ .card.expiration | substr 0 2 }}",
+            "expiryYear": "{{ .card.expiration | substr 3 8 }}",
             "holderName": "{{ .card.holder_name }}",
             "cvc": "{{ .card.cvv }}"
           },

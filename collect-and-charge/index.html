@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout Form</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="resources/styles.css">
   <script src="https://cdn.piiano.com/pvault-forms-lib-v1.js"></script>
 </head>
+
 <body>
-    <div id="paymentDetails">
-      <h2>Payment Details (container of vault iframe)</h2>
-      <div id="payments_details_form"></div>
-    </div>
+  <div id="paymentDetails">
+    <h2>Payment Details (container of Vault iframe)</h2>
+    <div id="payments_details_form"></div>
+  </div>
   <script type="module">
     addEventListener('load', () => {
       pvault.createProtectedForm(document.getElementById("payments_details_form"), {
@@ -20,10 +22,10 @@
         collection: "payments",
         globalVaultIdentifiers: false,
         fields: [
-          {"name":"cvv","label":"CVV","dataTypeName":"CC_CVV","required":true},
-          {"name":"expiration","label":"Expiration","dataTypeName":"CC_EXPIRATION_STRING","required":true},
-          {"name":"holder_name","label":"Holder name","dataTypeName":"CC_HOLDER_NAME","required":true},
-          {"name":"number","label":"Card number","dataTypeName":"CC_NUMBER","required":true}
+          { "name": "cvv", "label": "CVV", "dataTypeName": "CC_CVV", "required": true },
+          { "name": "expiration", "label": "Expiration", "dataTypeName": "CC_EXPIRATION_STRING", "required": true },
+          { "name": "holder_name", "label": "Holder name", "dataTypeName": "CC_HOLDER_NAME", "required": true },
+          { "name": "number", "label": "Card number", "dataTypeName": "CC_NUMBER", "required": true }
         ],
         submitButton: "Pay",
         strategy: "tokenize-object",
@@ -35,7 +37,7 @@
               headers: {
                 "Content-Type": "application/json"
               },
-              body: JSON.stringify({data})
+              body: JSON.stringify({ data })
             }).then(response => {
               if (response.ok) {
                 console.log("Payment successful")
