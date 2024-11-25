@@ -3,9 +3,10 @@ import express from "express";
 import { AddressInfo } from "net";
 import { runVault } from "./src/vault";
 import { ADYEN_URL, payWithAdyen } from "./src/adyen";
+import { STRIPE_URL, payWithStripe } from "./src/stripe";
 
 // Run and initialize Vault.
-await runVault(ADYEN_URL);
+await runVault(`${ADYEN_URL},${STRIPE_URL}`);
 
 const app = express();
 app.use(express.json());
@@ -15,13 +16,20 @@ app.post("/api/payment", async (req, res) => {
 
   // Pay with Adyen.
   try {
-    const resp = await payWithAdyen(tokenID);
+    let resp: any;
+    if (Math.random() < 0.5) {
+      console.log("Pay with Stripe");
+      resp = await payWithStripe(tokenID);
+    } else {
+      console.log("Pay with Adyen");
+      resp = await payWithAdyen(tokenID);
+    }
     const result = await resp.json();
 
-    console.log('Success:', result);
+    console.log("Success:", result);
     res.json({ status: "success" });
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     res.json({ status: "error" });
   }
 });
