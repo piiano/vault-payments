@@ -1,0 +1,9 @@
+/* Styling for the payments_details_form div */
+#payments_details_form {
+    max-width: 400px; /* Set a maximum width */
+    padding: 10px 125px 10px 10px;
+    border: 1px solid #ccc; /* Add a light border */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background color */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
