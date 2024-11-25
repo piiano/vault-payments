@@ -18,7 +18,7 @@ Safely store sensitive personal data in your own cloud environment with automate
 
 The repository demonstrate various payment use cases with Vault.
 
-- [Collect and Charge](./collect-and-charge) - Collect credit card information in a PCI scoped iframe and charge it later using Stripe or Ayden.
+- [Collect and Charge](./collect-and-charge) - Collect credit card information in a PCI scoped iframe and charge it later using Stripe or Adyen.
 
 ## About Piiano Vault
 

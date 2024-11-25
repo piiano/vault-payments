@@ -6,7 +6,7 @@ import { ADYEN_URL, payWithAdyen } from "./src/adyen";
 import { STRIPE_URL, payWithStripe } from "./src/stripe";
 
 // Run and initialize Vault.
-await runVault(`${ADYEN_URL},${STRIPE_URL}`);
+await runVault([ADYEN_URL, STRIPE_URL].join(","));
 
 const app = express();
 app.use(express.json());
@@ -14,7 +14,6 @@ app.post("/api/payment", async (req, res) => {
   const tokenID = req.body.data;
   console.log("token: ", tokenID);
 
-  // Pay with Adyen.
   try {
     let resp: any;
     if (Math.random() < 0.5) {

@@ -3,7 +3,6 @@ import { VaultClient } from "@piiano/vault-client";
 
 export async function runVault(allowedDestinations: string) {
   const vault = new Vault({
-    version: "1.13.3",
     env: {
       PVAULT_SENTRY_ENABLE: false,
       PVAULT_LOG_DATADOG_ENABLE: 'none',
