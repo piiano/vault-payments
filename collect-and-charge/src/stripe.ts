@@ -1,12 +1,11 @@
 export const STRIPE_URL = "https://api.stripe.com";
 const STRIPE_API_KEY = process.env.STRIPE_API_KEY;
 
-export async function payWithStripe(tokenId: string) {
+export async function payWithStripe(vaultUrl: string, tokenId: string) {
   const auth = btoa(`${STRIPE_API_KEY}:`);
 
   const resp = await fetch(
-    process.env.VITE_PVAULT_URL +
-    "/api/pvlt/1.0/data/actions/http_call?reason=AppFunctionality",
+    vaultUrl + "/api/pvlt/1.0/data/actions/http_call?reason=AppFunctionality",
     {
       method: "POST",
       headers: {
@@ -40,9 +39,7 @@ export async function payWithStripe(tokenId: string) {
 
   const paymentMethod = await resp.json();
 
-  return await fetch(
-    process.env.VITE_PVAULT_URL +
-    "/api/pvlt/1.0/data/actions/http_call?reason=AppFunctionality",
+  return await fetch(vaultUrl + "/api/pvlt/1.0/data/actions/http_call?reason=AppFunctionality",
     {
       method: "POST",
       headers: {
@@ -50,6 +47,7 @@ export async function payWithStripe(tokenId: string) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        template_variables: {},
         request: {
           url: STRIPE_URL + "/v1/payment_intents",
           method: "POST",
