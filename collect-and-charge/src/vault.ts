@@ -1,7 +1,7 @@
 import { Vault } from "@piiano/testcontainers-vault";
 import { VaultClient } from "@piiano/vault-client";
 
-export async function runVault(allowedDestinations: string) {
+export async function runVault(allowedDestinations: string): Promise<string> {
   const vault = new Vault({
     env: {
       PVAULT_SENTRY_ENABLE: false,
@@ -13,7 +13,6 @@ export async function runVault(allowedDestinations: string) {
 
   const port = await vault.start();
   console.log("Vault started on port: ", port);
-  process.env.VITE_PVAULT_URL = `http://localhost:${port}`;
 
   const vaultClient = new VaultClient({
     vaultURL: `http://localhost:${port}`,
@@ -64,4 +63,6 @@ export async function runVault(allowedDestinations: string) {
       ],
     },
   })
+
+  return `http://localhost:${port}`;
 }

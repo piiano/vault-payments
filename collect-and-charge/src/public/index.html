@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout Form</title>
-  <link rel="stylesheet" href="resources/styles.css">
+  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.piiano.com/pvault-forms-lib-v1.js"></script>
 </head>
 
@@ -17,7 +17,7 @@
   <script type="module">
     addEventListener('load', () => {
       pvault.createProtectedForm(document.getElementById("payments_details_form"), {
-        vaultURL: import.meta.env.VITE_PVAULT_URL,
+        vaultURL: "{{ VAULT_URL }}",
         apiKey: "pvaultauth",
         collection: "payments",
         globalVaultIdentifiers: false,
