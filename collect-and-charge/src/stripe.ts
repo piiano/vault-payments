@@ -39,32 +39,20 @@ export async function payWithStripe(vaultUrl: string, tokenId: string) {
 
   const paymentMethod = await resp.json();
 
-  return await fetch(vaultUrl + "/api/pvlt/1.0/data/actions/http_call?reason=AppFunctionality",
+  return await fetch(STRIPE_URL + "/v1/payment_intents",
     {
       method: "POST",
       headers: {
-        Authorization: "Bearer pvaultauth",
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${auth}`,
       },
-      body: JSON.stringify({
-        template_variables: {},
-        request: {
-          url: STRIPE_URL + "/v1/payment_intents",
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            Authorization: `Basic ${auth}`,
-          },
-          body: new URLSearchParams({
-            "amount": "20",
-            "currency": "USD",
-            "payment_method": paymentMethod.id,
-            "automatic_payment_methods": "{\"enabled\": false, \"allow_redirects\": \"never\"}",
-            "payment_method_options": "{\"card\": {\"request_three_d_secure\": \"any\"}}",
-          }).toString(),
-        },
-        include_response_body: true,
-      }),
+      body: new URLSearchParams({
+        "amount": "20",
+        "currency": "USD",
+        "payment_method": paymentMethod.id,
+        "automatic_payment_methods": "{\"enabled\": false, \"allow_redirects\": \"never\"}",
+        "payment_method_options": "{\"card\": {\"request_three_d_secure\": \"any\"}}",
+      }).toString(),
     }
   );
 }
