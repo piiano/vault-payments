@@ -1,7 +1,7 @@
 export const STRIPE_URL = "https://api.stripe.com";
 const STRIPE_API_KEY = process.env.STRIPE_API_KEY;
 
-export async function payWithStripe(vaultUrl: string, tokenId: string) {
+export async function payWithStripe(vaultUrl: string, vaultServerApiKey: string, tokenId: string) {
   const auth = btoa(`${STRIPE_API_KEY}:`);
 
   const resp = await fetch(
@@ -9,7 +9,7 @@ export async function payWithStripe(vaultUrl: string, tokenId: string) {
     {
       method: "POST",
       headers: {
-        Authorization: "Bearer pvaultauth",
+        Authorization: "Bearer " + vaultServerApiKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

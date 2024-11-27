@@ -2,13 +2,28 @@ import path from "path";
 import express from "express";
 import { AddressInfo } from "net";
 import { promises as fs } from "fs";
-import { runVault } from "./vault.js";
+import { defaultPvaultApiKey, runVault } from "./vault.js";
 import { ADYEN_URL, payWithAdyen } from "./adyen.js";
 import { STRIPE_URL, payWithStripe } from "./stripe.js";
 
 async function main() {
-  // Run and initialize Vault.
-  const vaultUrl = await runVault([ADYEN_URL, STRIPE_URL].join(","));
+
+  let vaultUrl = process.env.VAULT_URL;
+  if (!vaultUrl) {
+    // Run and initialize Vault.
+    vaultUrl = await runVault([ADYEN_URL, STRIPE_URL].join(","));
+    console.log(`Vault initialized at ${vaultUrl}`);
+  }
+
+  let vaultClientApiKey = process.env.VAULT_CLIENT_API_KEY;
+  if (!vaultClientApiKey) {
+    vaultClientApiKey = defaultPvaultApiKey;
+  }
+
+  let vaultServerApiKey = process.env.VAULT_SERVER_API_KEY;
+  if (!vaultServerApiKey) {
+    vaultServerApiKey = defaultPvaultApiKey;
+  }
 
   const app = express()
     .disable("x-powered-by") // Disable x-powered-by express header
@@ -22,10 +37,10 @@ async function main() {
       let resp: any;
       if (Math.random() < 0.5) {
         console.log("Pay with Stripe");
-        resp = await payWithStripe(vaultUrl, tokenID);
+        resp = await payWithStripe(vaultUrl, vaultServerApiKey, tokenID);
       } else {
         console.log("Pay with Adyen");
-        resp = await payWithAdyen(vaultUrl, tokenID);
+        resp = await payWithAdyen(vaultUrl, vaultServerApiKey, tokenID);
       }
       const result = await resp.json();
 
@@ -53,6 +68,9 @@ async function main() {
         const modifiedContent: string = data.replace(
           "{{ VAULT_URL }}",
           vaultUrl
+        ).replace(
+          "{{ VAULT_CLIENT_API_KEY }}",
+          vaultClientApiKey
         );
 
         // Send the modified content

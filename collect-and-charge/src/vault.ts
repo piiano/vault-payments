@@ -1,6 +1,8 @@
 import { Vault } from "@piiano/testcontainers-vault";
 import { VaultClient } from "@piiano/vault-client";
 
+export const defaultPvaultApiKey = "pvaultauth";
+
 export async function runVault(allowedDestinations: string): Promise<string> {
   const vault = new Vault({
     env: {
@@ -17,7 +19,7 @@ export async function runVault(allowedDestinations: string): Promise<string> {
 
   const vaultClient = new VaultClient({
     vaultURL: `http://localhost:${port}`,
-    apiKey: "pvaultauth",
+    apiKey: defaultPvaultApiKey,
   });
 
   await vaultClient.collections.addCollection({
