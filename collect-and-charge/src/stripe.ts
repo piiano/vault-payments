@@ -23,14 +23,26 @@ export async function payWithStripe(vaultUrl: string, tokenId: string) {
             "Content-Type": "application/x-www-form-urlencoded",
             Authorization: `Basic ${auth}`,
           },
+
           body: new URLSearchParams({
-            "type": "card",
-            "card[number]": "{{ .card.number }}",
-            "card[cvc]": "{{ .card.cvc }}",
-            "card[exp_month]": "{{ .card.expiration | substr 0 2 }}",
-            "card[exp_year]": "{{ .card.expiration | substr 3 8 }}",
+            type: "card",
+            "card[number]": "CARD",
+            "card[cvc]": "CVC",
+            "card[exp_month]": "EXP_MONTH",
+            "card[exp_year]": "EXP_YEAR",
             // TBD: cardholder: { name: "{{ .card.holder_name }}" },
-          }).toString(),
+          })
+            .toString()
+            .replace("CARD", "{{ .card.number | urlquery }}")
+            .replace("CVC", "{{ .card.cvv | urlquery }}")
+            .replace(
+              "EXP_MONTH",
+              "{{ .card.expiration | substr 0 2 | urlquery }}"
+            )
+            .replace(
+              "EXP_YEAR",
+              "{{ .card.expiration | substr 3 8 | urlquery }}"
+            ),
         },
         include_response_body: true,
       }),
@@ -38,21 +50,21 @@ export async function payWithStripe(vaultUrl: string, tokenId: string) {
   );
 
   const paymentMethod = await resp.json();
+  console.log(resp.status, resp.statusText, paymentMethod);
 
-  return await fetch(STRIPE_URL + "/v1/payment_intents",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Authorization: `Basic ${auth}`,
-      },
-      body: new URLSearchParams({
-        "amount": "20",
-        "currency": "USD",
-        "payment_method": paymentMethod.id,
-        "automatic_payment_methods": "{\"enabled\": false, \"allow_redirects\": \"never\"}",
-        "payment_method_options": "{\"card\": {\"request_three_d_secure\": \"any\"}}",
-      }).toString(),
-    }
-  );
+  return await fetch(STRIPE_URL + "/v1/payment_intents", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: `Basic ${auth}`,
+    },
+    body: new URLSearchParams({
+      amount: "20",
+      currency: "USD",
+      payment_method: paymentMethod.id,
+      automatic_payment_methods:
+        '{"enabled": false, "allow_redirects": "never"}',
+      payment_method_options: '{"card": {"request_three_d_secure": "any"}}',
+    }).toString(),
+  });
 }

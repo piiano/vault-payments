@@ -5,10 +5,11 @@ export async function runVault(allowedDestinations: string): Promise<string> {
   const vault = new Vault({
     env: {
       PVAULT_SENTRY_ENABLE: false,
-      PVAULT_LOG_DATADOG_ENABLE: 'none',
+      PVAULT_LOG_DATADOG_ENABLE: "none",
       PVAULT_SERVICE_ALLOWED_PCI_HTTP_DESTINATIONS: allowedDestinations,
       PVAULT_SERVICE_ALLOWED_HTTP_DESTINATIONS: allowedDestinations,
-    }
+      PVAULT_DEVMODE: true,
+    },
   });
 
   const port = await vault.start();
@@ -17,44 +18,44 @@ export async function runVault(allowedDestinations: string): Promise<string> {
   const vaultClient = new VaultClient({
     vaultURL: `http://localhost:${port}`,
     apiKey: "pvaultauth",
-  })
+  });
 
   await vaultClient.collections.addCollection({
     requestBody: {
-      name: 'payments',
-      type: 'DATA',
+      name: "payments",
+      type: "DATA",
       properties: [
         {
-          name: 'holder_name',
-          data_type_name: 'CC_HOLDER_NAME',
-          description: 'Credit card holder name',
+          name: "holder_name",
+          data_type_name: "CC_HOLDER_NAME",
+          description: "Credit card holder name",
           is_encrypted: true,
           is_index: false,
           is_nullable: false,
           is_unique: false,
         },
         {
-          name: 'number',
-          data_type_name: 'CC_NUMBER',
-          description: 'Credit card number',
+          name: "number",
+          data_type_name: "CC_NUMBER",
+          description: "Credit card number",
           is_encrypted: true,
           is_index: false,
           is_nullable: false,
           is_unique: false,
         },
         {
-          name: 'expiration',
-          data_type_name: 'CC_EXPIRATION_STRING',
-          description: 'Credit card expiration',
+          name: "expiration",
+          data_type_name: "CC_EXPIRATION_STRING",
+          description: "Credit card expiration",
           is_encrypted: true,
           is_index: false,
           is_nullable: false,
           is_unique: false,
         },
         {
-          name: 'cvv',
-          data_type_name: 'CC_CVV',
-          description: 'Credit card CVV',
+          name: "cvv",
+          data_type_name: "CC_CVV",
+          description: "Credit card CVV",
           is_encrypted: true,
           is_index: false,
           is_nullable: false,
@@ -62,7 +63,7 @@ export async function runVault(allowedDestinations: string): Promise<string> {
         },
       ],
     },
-  })
+  });
 
   return `http://localhost:${port}`;
 }
