@@ -15,15 +15,8 @@ async function main() {
     console.log(`Vault initialized at ${vaultUrl}`);
   }
 
-  let vaultClientApiKey = process.env.VAULT_CLIENT_API_KEY;
-  if (!vaultClientApiKey) {
-    vaultClientApiKey = defaultPvaultApiKey;
-  }
-
-  let vaultServerApiKey = process.env.VAULT_SERVER_API_KEY;
-  if (!vaultServerApiKey) {
-    vaultServerApiKey = defaultPvaultApiKey;
-  }
+  const vaultClientApiKey = process.env.VAULT_CLIENT_API_KEY ?? defaultPvaultApiKey;
+  const vaultServerApiKey = process.env.VAULT_SERVER_API_KEY ?? defaultPvaultApiKey;
 
   const app = express()
     .disable("x-powered-by") // Disable x-powered-by express header
