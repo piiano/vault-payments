@@ -59,7 +59,7 @@ export async function payWithStripe(vaultUrl: string, tokenId: string) {
       Authorization: `Basic ${auth}`,
     },
     body: new URLSearchParams({
-      amount: "20",
+      amount: "50", // cents
       currency: "USD",
       payment_method: paymentMethod.id,
       automatic_payment_methods:
