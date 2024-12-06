@@ -18,14 +18,14 @@
     addEventListener('load', () => {
       pvault.createProtectedForm(document.getElementById("payments_details_form"), {
         vaultURL: "{{ VAULT_URL }}",
-        apiKey: "pvaultauth",
+        apiKey: "{{ VAULT_CLIENT_API_KEY }}",
         collection: "payments",
         globalVaultIdentifiers: false,
         fields: [
-          { "name": "cvv", "label": "CVV", "dataTypeName": "CC_CVV", "required": true },
+          { "name": "number", "label": "Card number", "dataTypeName": "CC_NUMBER", "required": true },
           { "name": "expiration", "label": "Expiration", "dataTypeName": "CC_EXPIRATION_STRING", "required": true },
           { "name": "holder_name", "label": "Holder name", "dataTypeName": "CC_HOLDER_NAME", "required": true },
-          { "name": "number", "label": "Card number", "dataTypeName": "CC_NUMBER", "required": true }
+          { "name": "cvv", "label": "CVV", "dataTypeName": "CC_CVV", "required": true }
         ],
         submitButton: "Pay",
         strategy: "tokenize-object",

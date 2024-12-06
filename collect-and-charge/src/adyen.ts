@@ -5,11 +5,11 @@ const ADYEN_PAYMENT_ENDPOINT = ADYEN_URL + '/v71/payments';
 const ADYEN_API_KEY = process.env.ADYEN_API_KEY;
 const ADYEN_MERCHANT_ACCOUNT = process.env.ADYEN_MERCHANT_ACCOUNT;
 
-export async function payWithAdyen(vaultUrl: string, tokenId: string) {
+export async function payWithAdyen(vaultUrl: string, vaultServerApiKey: string, tokenId: string) {
   return fetch(vaultUrl + '/api/pvlt/1.0/data/actions/http_call?reason=AppFunctionality', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer pvaultauth',
+      'Authorization': 'Bearer ' + vaultServerApiKey,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
